@@ -67,6 +67,7 @@ public class MovementController : MonoBehaviour
                 if (castDirection.x > 0)
                     hookAnchorAngle -= Mathf.PI;
                 hookAnchorAngle -= transform.eulerAngles.z * Mathf.PI / 180;
+                pBody.angularVelocity = 0;
             }
         }
         if (Input.GetMouseButtonUp(0))
