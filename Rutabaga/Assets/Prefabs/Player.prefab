@@ -123,6 +123,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MovePower: 5
   HookRetractSpeed: 3
+  HookRange: 10
   hookPointPrefab: {fileID: 8827944440256735181, guid: ed43a7eadb4c3a84faff5ab7d698b071, type: 3}
 --- !u!70 &1687339275019366474
 CapsuleCollider2D:

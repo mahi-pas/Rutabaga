@@ -6,6 +6,7 @@ public class MovementController : MonoBehaviour
 {
     public float MovePower;
     public float HookRetractSpeed;
+    public float HookRange;
 
     Rigidbody2D pBody;
     DistanceJoint2D hookEnforcer;
@@ -24,19 +25,27 @@ public class MovementController : MonoBehaviour
     {
         float joystick = Input.GetAxis("Horizontal");
         pBody.AddTorque(-joystick * Time.deltaTime * MovePower, ForceMode2D.Impulse);
-        hookEnforcer.distance -= HookRetractSpeed * Time.deltaTime;
+        if(hookEnforcer.distance > 1)
+            hookEnforcer.distance -= HookRetractSpeed * Time.deltaTime;
         if (Input.GetMouseButtonDown(0))
         {
-            Vector3 newHookPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            newHookPoint.z = 0;
-            hookPoint = Instantiate(hookPointPrefab);
-            hookPoint.transform.position = newHookPoint;
-            hookEnforcer.enabled = true;
-            hookEnforcer.distance = Vector3.Distance(transform.position, hookPoint.transform.position);
-            hookEnforcer.connectedBody = hookPoint.GetComponent<Rigidbody2D>();
+            //Find the hook point
+            Vector3 mousePoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            mousePoint.z = 0;
+            Vector3 castDirection = Vector3.Normalize(mousePoint - transform.position);
+            RaycastHit2D rayHit = Physics2D.Raycast(transform.position + castDirection * 0.5f, castDirection, HookRange);
+            if (rayHit.collider != null)
+            {
+                //Attach the hook
+                hookPoint = Instantiate(hookPointPrefab);
+                hookPoint.transform.position = rayHit.point;
+                hookEnforcer.enabled = true;
+                hookEnforcer.distance = Vector3.Distance(transform.position, hookPoint.transform.position);
+                hookEnforcer.connectedBody = hookPoint.GetComponent<Rigidbody2D>();
+            }
         }
         if (Input.GetMouseButtonUp(0))
-        {
+        { //Remove the hook
             hookEnforcer.enabled = false;
             Destroy(hookPoint);
         }
