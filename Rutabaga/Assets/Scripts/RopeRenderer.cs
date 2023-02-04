@@ -22,6 +22,8 @@ public class RopeRenderer : MonoBehaviour
     {
         if (grappling)
         {
+            if(!rope.enabled)
+                rope.enabled = true;
             Vector3 displacement = grabPoint - transform.position;
             if (grabbedTime < TravelTime)
                 displacement *= grabbedTime / TravelTime;
@@ -44,7 +46,6 @@ public class RopeRenderer : MonoBehaviour
     {
         grabPoint = point;
         grappling = true;
-        rope.enabled = true;
         grabbedTime = 0;
     }
 
