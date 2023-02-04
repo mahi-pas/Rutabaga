@@ -5,6 +5,7 @@ using UnityEngine;
 public class MovementController : MonoBehaviour
 {
     public float MovePower;
+    public float MaxAngularSpeed;
     public float HookRetractSpeed;
     public float HookRange;
 
@@ -27,6 +28,11 @@ public class MovementController : MonoBehaviour
     {
         float joystick = Input.GetAxis("Horizontal");
         pBody.AddTorque(-joystick * Time.deltaTime * MovePower, ForceMode2D.Impulse);
+        if (pBody.angularVelocity > MaxAngularSpeed)
+            pBody.angularVelocity = MaxAngularSpeed;
+        else if (pBody.angularVelocity < -MaxAngularSpeed)
+            pBody.angularVelocity = -MaxAngularSpeed;
+
         if(hookEnforcer.distance > 1)
             hookEnforcer.distance -= HookRetractSpeed * Time.deltaTime;
         if (Input.GetMouseButtonDown(0))

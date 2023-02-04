@@ -5,6 +5,7 @@ using UnityEngine;
 public class RopeRenderer : MonoBehaviour
 {
     public float StraighteningTime;
+    public float TravelTime;
 
     LineRenderer rope;
     Vector3 grabPoint;
@@ -22,6 +23,8 @@ public class RopeRenderer : MonoBehaviour
         if (grappling)
         {
             Vector3 displacement = grabPoint - transform.position;
+            if (grabbedTime < TravelTime)
+                displacement *= grabbedTime / TravelTime;
             Vector3 normal = new Vector3(-Vector3.Normalize(displacement).y, Vector3.Normalize(displacement).x, 0);
             for(int i=0; i<rope.positionCount; i++)
             {
