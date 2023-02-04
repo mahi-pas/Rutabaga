@@ -9,6 +9,7 @@ public class MovementController : MonoBehaviour
     public float HookRetractSpeed;
     public float HookRange;
 
+    float hookAnchorAngle;
     RopeRenderer ropeMaker;
     Rigidbody2D pBody;
     DistanceJoint2D hookEnforcer;
@@ -27,14 +28,24 @@ public class MovementController : MonoBehaviour
     void Update()
     {
         float joystick = Input.GetAxis("Horizontal");
-        pBody.AddTorque(-joystick * Time.deltaTime * MovePower, ForceMode2D.Impulse);
-        if (pBody.angularVelocity > MaxAngularSpeed)
-            pBody.angularVelocity = MaxAngularSpeed;
-        else if (pBody.angularVelocity < -MaxAngularSpeed)
-            pBody.angularVelocity = -MaxAngularSpeed;
-
-        if(hookEnforcer.distance > 1)
-            hookEnforcer.distance -= HookRetractSpeed * Time.deltaTime;
+        if (hookPoint == null)
+        {
+            pBody.AddTorque(-joystick * Time.deltaTime * MovePower, ForceMode2D.Impulse);
+            if (pBody.angularVelocity > MaxAngularSpeed)
+                pBody.angularVelocity = MaxAngularSpeed;
+            else if (pBody.angularVelocity < -MaxAngularSpeed)
+                pBody.angularVelocity = -MaxAngularSpeed;
+        }
+        else
+        {
+            if (hookEnforcer.distance > 1)
+                hookEnforcer.distance -= HookRetractSpeed * Time.deltaTime;
+            Vector3 vectorToHook = hookPoint.transform.position - transform.position;
+            float angleToHook = Mathf.Atan(vectorToHook.y / vectorToHook.x) + Mathf.PI / 2;
+            if (vectorToHook.x > 0)
+                angleToHook -= Mathf.PI;
+            transform.eulerAngles = Vector3.forward * (angleToHook - hookAnchorAngle) * 180 / Mathf.PI;
+        }
         if (Input.GetMouseButtonDown(0))
         {
             //Find the hook point
@@ -50,8 +61,12 @@ public class MovementController : MonoBehaviour
                 hookEnforcer.enabled = true;
                 hookEnforcer.distance = Vector3.Distance(transform.position, hookPoint.transform.position);
                 hookEnforcer.connectedBody = hookPoint.GetComponent<Rigidbody2D>();
-
                 ropeMaker.Grapple(rayHit.point);
+
+                hookAnchorAngle = Mathf.Atan(castDirection.y / castDirection.x) + Mathf.PI / 2;
+                if (castDirection.x > 0)
+                    hookAnchorAngle -= Mathf.PI;
+                hookAnchorAngle -= transform.eulerAngles.z * Mathf.PI / 180;
             }
         }
         if (Input.GetMouseButtonUp(0))
