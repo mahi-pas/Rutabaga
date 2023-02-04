@@ -8,6 +8,7 @@ public class MovementController : MonoBehaviour
     public float HookRetractSpeed;
     public float HookRange;
 
+    RopeRenderer ropeMaker;
     Rigidbody2D pBody;
     DistanceJoint2D hookEnforcer;
     GameObject hookPoint;
@@ -15,6 +16,7 @@ public class MovementController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        ropeMaker = GetComponent<RopeRenderer>();
         pBody = GetComponent<Rigidbody2D>();
         hookEnforcer = GetComponent<DistanceJoint2D>();
         hookEnforcer.enabled = false;
@@ -42,12 +44,16 @@ public class MovementController : MonoBehaviour
                 hookEnforcer.enabled = true;
                 hookEnforcer.distance = Vector3.Distance(transform.position, hookPoint.transform.position);
                 hookEnforcer.connectedBody = hookPoint.GetComponent<Rigidbody2D>();
+
+                ropeMaker.Grapple(rayHit.point);
             }
         }
         if (Input.GetMouseButtonUp(0))
         { //Remove the hook
             hookEnforcer.enabled = false;
             Destroy(hookPoint);
+
+            ropeMaker.Unhook();
         }
     }
 }
