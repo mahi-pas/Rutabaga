@@ -7,7 +7,9 @@ public class PlayerHealth : MonoBehaviour
     public int maxHealth = 3;
     public int curHealth;
 
+    public Animator checkpointAnim;
     public HUD hud;
+    public CheckpointManager checkpointM;
 
     // Start is called before the first frame update
     void Start()
@@ -22,6 +24,8 @@ public class PlayerHealth : MonoBehaviour
 
     public void Respawn(){
         Debug.Log("Respawn");
+        checkpointAnim.SetTrigger("Flash");
+        transform.position = new Vector3 (checkpointM.checkpoints[checkpointM.currentCheckpoint].transform.position.x, -4.065f, 0);
     }
 
     void Die(){
