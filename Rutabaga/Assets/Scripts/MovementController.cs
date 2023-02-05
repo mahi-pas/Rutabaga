@@ -9,6 +9,8 @@ public class MovementController : MonoBehaviour
     public float HookRetractSpeed;
     public float HookRange;
 
+    bool isGrappled = false;
+    float timeTillGrapple = 0;
     float hookAnchorAngle;
     RopeRenderer ropeMaker;
     Rigidbody2D pBody;
@@ -32,7 +34,7 @@ public class MovementController : MonoBehaviour
     void Update()
     {
         float joystick = Input.GetAxis("Horizontal");
-        if (hookPoint == null)
+        if (!isGrappled)
         {
             pBody.AddTorque(-joystick * Time.deltaTime * MovePower, ForceMode2D.Impulse);
             if (pBody.angularVelocity > MaxAngularSpeed)
@@ -50,6 +52,25 @@ public class MovementController : MonoBehaviour
                 angleToHook -= Mathf.PI;
             transform.eulerAngles = Vector3.forward * (angleToHook - hookAnchorAngle) * 180 / Mathf.PI;
         }
+
+        if (timeTillGrapple > 0)
+        {
+            timeTillGrapple -= Time.deltaTime;
+            if (timeTillGrapple <= 0)
+            { // This is when the hook lands
+                isGrappled = true;
+                hookEnforcer.enabled = true;
+
+                Vector3 castDirection = hookPoint.transform.position - transform.position;
+                hookEnforcer.distance = castDirection.magnitude;
+                hookAnchorAngle = Mathf.Atan(castDirection.y / castDirection.x) + Mathf.PI / 2;
+                if (castDirection.x > 0)
+                    hookAnchorAngle -= Mathf.PI;
+                hookAnchorAngle -= transform.eulerAngles.z * Mathf.PI / 180;
+                pBody.angularVelocity = 0;
+            }
+        }
+
         if (Input.GetMouseButtonDown(0))
         {
             //Find the hook point
@@ -62,16 +83,10 @@ public class MovementController : MonoBehaviour
                 //Attach the hook
                 hookPoint = Instantiate(hookPointPrefab);
                 hookPoint.transform.position = rayHit.point;
-                hookEnforcer.enabled = true;
-                hookEnforcer.distance = Vector3.Distance(transform.position, hookPoint.transform.position);
+                hookPoint.transform.parent = rayHit.transform;
                 hookEnforcer.connectedBody = hookPoint.GetComponent<Rigidbody2D>();
-                ropeMaker.Grapple(rayHit.point);
-
-                hookAnchorAngle = Mathf.Atan(castDirection.y / castDirection.x) + Mathf.PI / 2;
-                if (castDirection.x > 0)
-                    hookAnchorAngle -= Mathf.PI;
-                hookAnchorAngle -= transform.eulerAngles.z * Mathf.PI / 180;
-                pBody.angularVelocity = 0;
+                ropeMaker.Grapple(hookPoint.transform);
+                timeTillGrapple = ropeMaker.TravelTime;
 
                 //animation
                 anim.SetTrigger("Grapple");
@@ -81,7 +96,8 @@ public class MovementController : MonoBehaviour
         { //Remove the hook
             hookEnforcer.enabled = false;
             Destroy(hookPoint);
-
+            isGrappled = false;
+            timeTillGrapple = 0;
             ropeMaker.Unhook();
         }
     }

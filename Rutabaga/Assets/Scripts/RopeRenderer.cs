@@ -8,7 +8,7 @@ public class RopeRenderer : MonoBehaviour
     public float TravelTime;
 
     LineRenderer rope;
-    Vector3 grabPoint;
+    Transform grabPoint;
     bool grappling = false;
     float grabbedTime;
     
@@ -24,7 +24,7 @@ public class RopeRenderer : MonoBehaviour
         {
             if(grabbedTime == 0)
                 rope.enabled = true;
-            Vector3 displacement = grabPoint - transform.position;
+            Vector3 displacement = grabPoint.position - transform.position;
             if (grabbedTime < TravelTime)
                 displacement *= grabbedTime / TravelTime;
             Vector3 normal = new Vector3(-Vector3.Normalize(displacement).y, Vector3.Normalize(displacement).x, 0);
@@ -42,7 +42,7 @@ public class RopeRenderer : MonoBehaviour
         }
     }
 
-    public void Grapple(Vector3 point)
+    public void Grapple(Transform point)
     {
         grabPoint = point;
         grappling = true;
