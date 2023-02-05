@@ -17,6 +17,8 @@ public class PlayerHealth : MonoBehaviour
     public Color normalColor;
     public SpriteRenderer spr;
 
+    public MovementController pm;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -26,6 +28,8 @@ public class PlayerHealth : MonoBehaviour
         spr = GetComponent<SpriteRenderer>();
         immune = false;
         normalColor = spr.color;
+
+        pm = GetComponent<MovementController>();
     }
 
     public void TakeDamage(int dmg){
@@ -38,6 +42,7 @@ public class PlayerHealth : MonoBehaviour
         transform.position = new Vector3 (checkpointM.checkpoints[checkpointM.currentCheckpoint].transform.position.x, -4.065f, 0);
         GetComponent<Rigidbody2D>().velocity = new Vector2(0, 0);
         GetComponent<Rigidbody2D>().angularVelocity = 0.0f;
+        pm.RemoveHook();
     }
 
     void Die(){
