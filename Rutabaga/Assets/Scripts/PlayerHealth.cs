@@ -34,6 +34,7 @@ public class PlayerHealth : MonoBehaviour
 
     public void SetHealth(int h){
         curHealth = Mathf.Max(h,0);
+        curHealth = Mathf.Min(h,maxHealth);
         hud.SetHealth(curHealth);
         if(curHealth == 0){
             Die();

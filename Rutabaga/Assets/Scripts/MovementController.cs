@@ -15,6 +15,8 @@ public class MovementController : MonoBehaviour
     DistanceJoint2D hookEnforcer;
     GameObject hookPoint;
     public GameObject hookPointPrefab;
+
+    public Animator anim;
     // Start is called before the first frame update
     void Start()
     {
@@ -22,6 +24,8 @@ public class MovementController : MonoBehaviour
         pBody = GetComponent<Rigidbody2D>();
         hookEnforcer = GetComponent<DistanceJoint2D>();
         hookEnforcer.enabled = false;
+
+        anim = GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -68,6 +72,9 @@ public class MovementController : MonoBehaviour
                     hookAnchorAngle -= Mathf.PI;
                 hookAnchorAngle -= transform.eulerAngles.z * Mathf.PI / 180;
                 pBody.angularVelocity = 0;
+
+                //animation
+                anim.SetTrigger("Grapple");
             }
         }
         if (Input.GetMouseButtonUp(0))
