@@ -11,15 +11,25 @@ public class PlayerHealth : MonoBehaviour
     public HUD hud;
     public CheckpointManager checkpointM;
 
+    public bool immune;
+    public float immuneTime = 0.3f;
+    public Color hurtColor;
+    public Color normalColor;
+    public SpriteRenderer spr;
+
     // Start is called before the first frame update
     void Start()
     {
         curHealth = maxHealth;
         if(hud == null) hud = GameObject.FindGameObjectsWithTag("HUD")[0].GetComponent<HUD>();
+
+        spr = GetComponent<SpriteRenderer>();
+        immune = false;
+        normalColor = spr.color;
     }
 
     public void TakeDamage(int dmg){
-        SetHealth(curHealth - dmg);
+        if(!immune || dmg<0) SetHealth(curHealth - dmg);
     } 
 
     public void Respawn(){
@@ -30,18 +40,38 @@ public class PlayerHealth : MonoBehaviour
 
     void Die(){
         Debug.Log("You ran out of health!");
+        Respawn();
+        ResetHealth();
     }
 
     public void ResetHealth(){
         SetHealth(maxHealth);
     }
 
+    public void SetImmune(){
+        immune = true;
+        spr.color = hurtColor;
+        Invoke("SetNotImmune",immuneTime);
+    }
+
+    public void SetNotImmune(){
+        immune = false;
+        spr.color = normalColor;
+    }
+
     public void SetHealth(int h){
+        bool willBeImmune = false;
+        if(h<curHealth){
+            willBeImmune = true;
+        }
         curHealth = Mathf.Max(h,0);
         curHealth = Mathf.Min(h,maxHealth);
         hud.SetHealth(curHealth);
         if(curHealth == 0){
             Die();
+        }
+        else if (willBeImmune){
+            SetImmune();
         }
     }
 
