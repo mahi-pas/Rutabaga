@@ -21,7 +21,6 @@ public class MovingPlatform : MonoBehaviour
 
     void Update()
     {
-        Debug.Log(startingPosition.x + forwardDistance);
             if (verticleMovement)
             {
                 if (goingForward)

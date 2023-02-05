@@ -22,8 +22,6 @@ public class Insect : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.Log(transform.position.x);
-        Debug.Log(startingPosition.x + travelDistance);
         if (!inHive && travelRight && transform.position.x < startingPosition.x + travelDistance)
         {
             transform.position = new Vector3(transform.position.x + insectSpeed * Time.deltaTime, startingPosition.y, 0);

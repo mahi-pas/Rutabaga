@@ -36,6 +36,8 @@ public class PlayerHealth : MonoBehaviour
         Debug.Log("Respawn");
         checkpointAnim.SetTrigger("Flash");
         transform.position = new Vector3 (checkpointM.checkpoints[checkpointM.currentCheckpoint].transform.position.x, -4.065f, 0);
+        GetComponent<Rigidbody2D>().velocity = new Vector2(0, 0);
+        GetComponent<Rigidbody2D>().angularVelocity = 0.0f;
     }
 
     void Die(){
