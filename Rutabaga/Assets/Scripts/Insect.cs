@@ -6,9 +6,9 @@ public class Insect : MonoBehaviour
 {
     public float travelDistance;
     public float insectSpeed;
+    public bool travelRight = true;
 
     private Vector3 startingPosition;
-    private bool travelRight = true;
     private bool inHive = false;
     private float hiveTimer = 0;
     private SpriteRenderer sp;
