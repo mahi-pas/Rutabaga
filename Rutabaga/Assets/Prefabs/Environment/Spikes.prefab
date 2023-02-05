@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6943995879713156921}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Spikes
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -45,7 +45,7 @@ GameObject:
   - component: {fileID: 7091226514061293880}
   - component: {fileID: 8967138799254515459}
   - component: {fileID: 21913776173558053}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: SpikesObj
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -161,6 +161,8 @@ MonoBehaviour:
   respawnsPlayer: 1
   destroySelf: 0
   destructionPrefab: {fileID: 0}
+  hitSound: {fileID: 0}
+  prefabDestroyTime: 2
 --- !u!95 &21913776173558053
 Animator:
   serializedVersion: 5

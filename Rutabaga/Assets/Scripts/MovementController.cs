@@ -94,11 +94,15 @@ public class MovementController : MonoBehaviour
         }
         if (Input.GetMouseButtonUp(0))
         { //Remove the hook
-            hookEnforcer.enabled = false;
-            Destroy(hookPoint);
-            isGrappled = false;
-            timeTillGrapple = 0;
-            ropeMaker.Unhook();
+            RemoveHook();
         }
+    }
+
+    public void RemoveHook(){
+        hookEnforcer.enabled = false;
+        Destroy(hookPoint);
+        isGrappled = false;
+        timeTillGrapple = 0;
+        ropeMaker.Unhook();
     }
 }
