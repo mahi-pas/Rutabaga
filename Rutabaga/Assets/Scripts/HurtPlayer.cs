@@ -7,6 +7,7 @@ public class HurtPlayer : MonoBehaviour
     public int damage;
     public bool respawnsPlayer;
     public bool destroySelf;
+    public GameObject destructionPrefab;
 
     private void OnCollisionEnter2D(Collision2D other) {
         Debug.Log("hit");
@@ -17,7 +18,10 @@ public class HurtPlayer : MonoBehaviour
             Debug.Log("found PlayerHealth");
             ph.TakeDamage(damage);
             if(respawnsPlayer) ph.Respawn();
-            if(destroySelf) Destroy(gameObject);
+            if(destroySelf){
+                Instantiate(destructionPrefab);
+                Destroy(gameObject);
+            }
         }
     }
 }
