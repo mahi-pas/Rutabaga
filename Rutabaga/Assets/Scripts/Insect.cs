@@ -12,6 +12,9 @@ public class Insect : MonoBehaviour
     private bool inHive = false;
     private float hiveTimer = 0;
     private SpriteRenderer sp;
+
+    //public bool willHide = true;
+
     // Start is called before the first frame update
     void Start()
     {
